@@ -13,13 +13,17 @@ class NoteController(private val noteRepository: NoteRepository) {
     @GetMapping
     fun getAllNotes(): List<Note> = 
         try {
-            noteRepository.findAll().also { notes ->
+            val notes = noteRepository.findAll()
+            if (notes.isEmpty()) {
+                println("No notes found in database")
+            } else {
                 println("Found ${notes.size} notes")
             }
+            notes
         } catch (e: Exception) {
             println("Error fetching notes: ${e.message}")
             e.printStackTrace()
-            emptyList()
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching notes")
         }
 
     @PostMapping
@@ -46,4 +50,14 @@ class NoteController(private val noteRepository: NoteRepository) {
     fun deleteAllNotes() {
         noteRepository.deleteAll()
     }
+
+    // Add endpoint to get notes by user
+    @GetMapping("/user/{userId}")
+    fun getNotesByUser(@PathVariable userId: Int): List<Note> =
+        try {
+            noteRepository.findByUserUserId(userId)
+        } catch (e: Exception) {
+            println("Error fetching notes for user $userId: ${e.message}")
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
 }
