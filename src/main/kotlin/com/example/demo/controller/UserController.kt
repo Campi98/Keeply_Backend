@@ -23,8 +23,12 @@ class UserController(private val userRepository: UserRepository) {
         val email = credentials["email"] ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         val password = credentials["password"] ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         
-        return userRepository.findByEmailAndPassword(email, password)
+        val userToReturn = userRepository.findByEmailAndPassword(email, password)
             ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+
+        userRepository.save(userToReturn.copy(loggedIn = true))
+
+        return userToReturn
     }
 
     @PutMapping("/{id}")

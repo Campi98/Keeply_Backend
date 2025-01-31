@@ -22,4 +22,7 @@ data class User(
     
     @Column(nullable = false)
     val password: String = ""
+
+    @Column(nullable = false)
+    val loggedIn: Boolean = false
 )

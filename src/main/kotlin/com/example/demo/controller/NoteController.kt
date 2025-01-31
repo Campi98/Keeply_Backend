@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/notes")
-class NoteController(private val noteRepository: NoteRepository) {
+class NoteController(private val noteRepository: NoteRepository, private val userRepository: UserRepository) {
 
     @GetMapping
     fun getAllNotes(): List<Note> = 
@@ -23,8 +23,13 @@ class NoteController(private val noteRepository: NoteRepository) {
         }
 
     @PostMapping
-    fun createNote(@RequestBody note: Note): Note = 
-        noteRepository.save(note)
+    fun createNote(@RequestBody note: Note): Note {
+        if (userRepository.existsById(note.userId)) {
+            return noteRepository.save(note)
+        } else {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
+    }
 
     @PutMapping("/{id}")
     fun updateNote(@PathVariable id: Long, @RequestBody note: Note): Note =
