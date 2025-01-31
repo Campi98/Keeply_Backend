@@ -59,9 +59,9 @@ class NoteController(private val noteRepository: NoteRepository) {
     @GetMapping("/user/{userId}")
     fun getNotesByUser(@PathVariable userId: Int): List<Note> =
         try {
-            noteRepository.findByUserUserId(userId)
+            noteRepository.findByUser_UserId(userId)  // Changed from findByUserUserId to findByUser_UserId
         } catch (e: Exception) {
-            println("Error fetching notes for user $userId: ${e.message}")
+            logger.error("Error fetching notes for user $userId", e)
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
         }
 }

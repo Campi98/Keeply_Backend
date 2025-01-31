@@ -9,9 +9,9 @@ data class Note(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
-    val user: Int,
+    val user: User,
     
     @Column(nullable = false)
     val title: String = "",
