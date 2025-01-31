@@ -1,16 +1,17 @@
 package com.example.demo.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Column
+import jakarta.persistence.*
 
 @Entity
+@Table(name = "notes")
 data class Note(
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
+    val user: User,
     
     @Column(nullable = false)
     val title: String = "",
