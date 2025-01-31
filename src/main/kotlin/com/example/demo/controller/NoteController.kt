@@ -5,6 +5,7 @@ import com.example.demo.repository.NoteRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import com.example.demo.repository.UserRepository
 
 @RestController
 @RequestMapping("/api/notes")

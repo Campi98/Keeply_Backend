@@ -13,7 +13,7 @@ data class Note(
     val id: Long = 0,
 
     @Column(nullable = false)
-    val userId: Long = 0,
+    val userId: Int = 0,
     
     @Column(nullable = false)
     val title: String = "",
