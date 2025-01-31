@@ -11,7 +11,7 @@ data class Note(
     
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    val user: User,
+    val user: Int,
     
     @Column(nullable = false)
     val title: String = "",

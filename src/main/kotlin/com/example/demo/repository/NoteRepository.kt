@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface NoteRepository : JpaRepository<Note, Long> {
-    fun findByUserUserId(userId: Int): List<Note>
+    fun findByUserId(userId: Int): List<Note>
 }
