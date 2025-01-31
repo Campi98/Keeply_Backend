@@ -5,7 +5,6 @@ import com.example.demo.repository.NoteRepository
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
-import org.slf4j.LoggerFactory
 
 @RestController
 @RequestMapping("/api/notes")
@@ -13,17 +12,21 @@ class NoteController(private val noteRepository: NoteRepository) {
 
     @GetMapping
     fun getAllNotes(): List<Note> = 
-        noteRepository.findAll()
+        try {
+            noteRepository.findAll().also { notes ->
+                println("Found ${notes.size} notes")
+            }
+        } catch (e: Exception) {
+            println("Error fetching notes: ${e.message}")
+            e.printStackTrace()
+            emptyList()
+        }
 
     @PostMapping
-    fun createNote(@RequestBody note: Note): Note =
+    fun createNote(@RequestBody note: Note): Note = 
         noteRepository.save(note)
 
-    @GetMapping("/user/{userId}")
-    fun getNotesByUser(@PathVariable userId: Int): List<Note> =
-        noteRepository.findByUser_UserId(userId)
-
-    @PutMapping("/{id}")  
+    @PutMapping("/{id}")
     fun updateNote(@PathVariable id: Long, @RequestBody note: Note): Note =
         noteRepository.findById(id).map { existingNote ->
             noteRepository.save(note.copy(id = existingNote.id))
@@ -43,14 +46,4 @@ class NoteController(private val noteRepository: NoteRepository) {
     fun deleteAllNotes() {
         noteRepository.deleteAll()
     }
-
-    // Add endpoint to get notes by user
-    @GetMapping("/user/{userId}")
-    fun getNotesByUser(@PathVariable userId: Int): List<Note> =
-        try {
-            noteRepository.findByUser_UserId(userId)  // Changed from findByUserUserId to findByUser_UserId
-        } catch (e: Exception) {
-            logger.error("Error fetching notes for user $userId", e)
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-        }
 }
