@@ -7,6 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Column
 
 @Entity
+@Table(name = "users")
 data class User(
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
