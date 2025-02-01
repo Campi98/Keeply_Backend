@@ -23,6 +23,10 @@ class NoteController(private val noteRepository: NoteRepository, private val use
 
     @PostMapping
     fun createNote(@RequestBody note: Note): Note {
+        if (note.title.isEmpty() || note.content.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
+
         if (userRepository.existsById(note.userId)) {
             return noteRepository.save(note)
         } else {
@@ -44,10 +48,10 @@ class NoteController(private val noteRepository: NoteRepository, private val use
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
     }
-    
-    // delete all notes
-    @DeleteMapping
-    fun deleteAllNotes() {
-        noteRepository.deleteAll()
+
+    //Delete all notes by userId
+    @DeleteMapping()
+    fun deleteAllNotesByUserId(@RequestParam("userId") userId: Int) {
+        noteRepository.deleteByUserId(userId)
     }
 }
