@@ -34,9 +34,8 @@ class UserController(private val userRepository: UserRepository) {
     @PostMapping("/logout")
     fun logout(@RequestBody credentials: Map<String, String>): User {
         val email = credentials["email"] ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
-        val password = credentials["password"] ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         
-        val userToReturn = userRepository.findByEmailAndPassword(email, password)
+        val userToReturn = userRepository.findByEmail(email)
             ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
 
         userRepository.save(userToReturn.copy(loggedIn = false))
