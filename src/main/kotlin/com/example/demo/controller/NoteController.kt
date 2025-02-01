@@ -12,11 +12,9 @@ import com.example.demo.repository.UserRepository
 class NoteController(private val noteRepository: NoteRepository, private val userRepository: UserRepository) {
 
     @GetMapping
-    fun getAllNotes(): List<Note> = 
+    fun getUserNotes(@RequestParam("userId") userId: Int): List<Note> =
         try {
-            noteRepository.findAll().also { notes ->
-                println("Found ${notes.size} notes")
-            }
+            noteRepository.findAll().filter { it.userId == userId }
         } catch (e: Exception) {
             println("Error fetching notes: ${e.message}")
             e.printStackTrace()
