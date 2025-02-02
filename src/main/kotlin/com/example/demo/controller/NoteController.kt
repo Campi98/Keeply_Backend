@@ -6,10 +6,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import com.example.demo.repository.UserRepository
+import com.example.demo.service.NoteService
 
 @RestController
 @RequestMapping("/api/notes")
-class NoteController(private val noteRepository: NoteRepository, private val userRepository: UserRepository) {
+class NoteController(private val noteRepository: NoteRepository, private val userRepository: UserRepository, private val noteService: NoteService) {
 
     @GetMapping
     fun getUserNotes(@RequestParam("userId") userId: Int): List<Note> =
@@ -54,4 +55,12 @@ class NoteController(private val noteRepository: NoteRepository, private val use
     fun deleteAllNotesByUserId(@RequestParam("userId") userId: Int) {
         noteRepository.deleteByUserId(userId)
     }
+
+    @GetMapping("/deleted")
+    fun getDeletedNotes(@RequestParam userId: Long): List<Long> =
+        noteService.getDeletedNoteIds(userId)
+
+    @PostMapping("/deleted")
+    fun markAsDeleted(@RequestParam noteId: Long) =
+        noteService.markAsDeleted(noteId)
 }

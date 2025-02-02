@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 
 interface CustomNoteRepository {
     fun deleteByUserId(userId: Int)
+    fun findByUserIdAndIsDeletedTrue(userId: Long): List<Note>
 }
 
 @Repository
@@ -20,6 +21,15 @@ class CustomNoteRepositoryImpl(
         val query = entityManager.createQuery("DELETE FROM Note n WHERE n.userId = :userId")
         query.setParameter("userId", userId)
         query.executeUpdate()
+    }
+
+    override fun findByUserIdAndIsDeletedTrue(userId: Long): List<Note> {
+        val query = entityManager.createQuery(
+            "SELECT n FROM Note n WHERE n.userId = :userId AND n.isDeleted = true", 
+            Note::class.java
+        )
+        query.setParameter("userId", userId)
+        return query.resultList
     }
 }
 

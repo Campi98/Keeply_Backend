@@ -31,5 +31,8 @@ data class Note(
     val timestamp: Long = System.currentTimeMillis(),
     
     @Column(nullable = false)
-    val synced: Boolean = false
+    val synced: Boolean = false,
+
+    @Column(nullable = false)
+    val isDeleted: Boolean = false
 )
